@@ -17,11 +17,11 @@ class Movie(models.Model):
 
     release_date = models.DateField()
 
-    created_at = models.DateField(
+    created_at = models.DateTimeField(
         default=now
     )
 
-    updated_at = models.DateField(
+    updated_at = models.DateTimeField(
         default=now
     )
 
