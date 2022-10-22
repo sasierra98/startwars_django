@@ -1,3 +1,59 @@
-from django.shortcuts import render
+from rest_framework import views, status
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
-# Create your views here.
+from characters.serializers import PeopleSerializer
+from characters.models import People
+
+
+class PeopleView(views.APIView):
+    serializer_class = PeopleSerializer
+
+    def get(self, request, format=None, *args, **kwargs) -> Response:
+        people = People.objects.all()
+        serializer = self.serializer_class(people, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request, format=None, *args, **kwargs) -> Response:
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PeopleViewDetail(views.APIView):
+    serializer_class = PeopleSerializer
+
+    @staticmethod
+    def get_object(pk: int) -> People:
+        return get_object_or_404(People, id=pk)
+
+    def get(self, request, pk: int, format=None) -> Response:
+        people = self.get_object(pk=pk)
+        serializer = self.serializer_class(people)
+
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None) -> Response:
+        people = self.get_object(pk)
+        serializer = self.serializer_class(people, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk, format=None) -> Response:
+        people = self.get_object(pk)
+        serializer = self.serializer_class(people, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None) -> Response:
+        people = self.get_object(pk)
+        people.delete()
+        return Response('Deleted', status=status.HTTP_200_OK)
