@@ -7,13 +7,6 @@ from planets.models import Planet
 
 class TestPeopleModel(TestCase):
     def setUp(self) -> None:
-        self.empire = Movie.objects.create(**{
-            'name': 'El imperio contraataca',
-            'director': 'Irvin Kershner',
-            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
-            'release_date': '1980-12-05'
-        })
-
         self.tatooine = Planet.objects.create(**{
             'name': 'Tatooine',
             'diameter': 10465,
@@ -21,7 +14,14 @@ class TestPeopleModel(TestCase):
             'gravity': 1,
             'terrain': 'desert',
             'population': 200000,
-        }).movies.add(self.empire)
+        })
+
+        self.empire = Movie.objects.create(**{
+            'name': 'El imperio contraataca',
+            'director': 'Irvin Kershner',
+            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
+            'release_date': '1980-12-05'
+        }).planets.add(self.tatooine)
 
         self.luke = People.objects.create(**{
             'name': 'Luke Skywalker',

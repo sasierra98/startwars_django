@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
@@ -13,15 +14,9 @@ client = APIClient()
 
 
 class GetPeopleTest(APITestCase):
+    fixtures = ['users.json']
 
     def setUp(self) -> None:
-        self.empire = Movie.objects.create(**{
-            'name': 'El imperio contraataca',
-            'director': 'Irvin Kershner',
-            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
-            'release_date': '1980-12-05'
-        })
-
         self.tatooine = Planet.objects.create(**{
             'name': 'Tatooine',
             'diameter': 10465,
@@ -29,7 +24,14 @@ class GetPeopleTest(APITestCase):
             'gravity': 1,
             'terrain': 'desert',
             'population': 200000,
-        }).movies.add(self.empire)
+        })
+
+        self.empire = Movie.objects.create(**{
+            'name': 'El imperio contraataca',
+            'director': 'Irvin Kershner',
+            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
+            'release_date': '1980-12-05'
+        }).planets.add(self.tatooine)
 
         self.luke = People.objects.create(**{
             'name': 'Luke Skywalker',
@@ -44,6 +46,9 @@ class GetPeopleTest(APITestCase):
         }).movies.add(Movie.objects.get(name='El imperio contraataca'))
 
     def test_get_people_list(self) -> None:
+        api_user = User.objects.get(username='developer')
+
+        client.force_authenticate(user=api_user)
         response = client.get('/api/v1/people')
         people = People.objects.all()
         serializer = PeopleSerializer(people, many=True)
@@ -52,6 +57,9 @@ class GetPeopleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_people_detail(self) -> None:
+        api_user = User.objects.get(username='developer')
+
+        client.force_authenticate(user=api_user)
         people = People.objects.get(name='Luke Skywalker')
         response = client.get(f'/api/v1/people/{people.pk}')
         serializer = PeopleSerializer(people)
@@ -61,14 +69,9 @@ class GetPeopleTest(APITestCase):
 
 
 class CreatePeopleTest(APITestCase):
-    def setUp(self) -> None:
-        self.empire = Movie.objects.create(**{
-            'name': 'El imperio contraataca',
-            'director': 'Irvin Kershner',
-            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
-            'release_date': '1980-12-05'
-        })
+    fixtures = ['users.json']
 
+    def setUp(self) -> None:
         self.tatooine = Planet.objects.create(**{
             'name': 'Tatooine',
             'diameter': 10465,
@@ -76,8 +79,15 @@ class CreatePeopleTest(APITestCase):
             'gravity': 1,
             'terrain': 'desert',
             'population': 200000,
-        }).movies.add(self.empire)
-        
+        })
+
+        self.empire = Movie.objects.create(**{
+            'name': 'El imperio contraataca',
+            'director': 'Irvin Kershner',
+            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
+            'release_date': '1980-12-05'
+        }).planets.add(self.tatooine)
+
         self.payload = {
             'name': 'Luke Skywalker',
             'height': '172',
@@ -92,6 +102,9 @@ class CreatePeopleTest(APITestCase):
         }
 
     def test_create_people(self):
+        api_user = User.objects.get(username='developer')
+
+        client.force_authenticate(user=api_user)
         response = client.post(
             path='/api/v1/people',
             data=dumps(self.payload),
@@ -101,14 +114,9 @@ class CreatePeopleTest(APITestCase):
 
 
 class UpdatePeopleTest(APITestCase):
-    def setUp(self) -> None:
-        self.empire = Movie.objects.create(**{
-            'name': 'El imperio contraataca',
-            'director': 'Irvin Kershner',
-            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
-            'release_date': '1980-12-05'
-        })
+    fixtures = ['users.json']
 
+    def setUp(self) -> None:
         self.tatooine = Planet.objects.create(**{
             'name': 'Tatooine',
             'diameter': 10465,
@@ -116,7 +124,14 @@ class UpdatePeopleTest(APITestCase):
             'gravity': 1,
             'terrain': 'desert',
             'population': 200000,
-        }).movies.add(self.empire)
+        })
+
+        self.empire = Movie.objects.create(**{
+            'name': 'El imperio contraataca',
+            'director': 'Irvin Kershner',
+            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
+            'release_date': '1980-12-05'
+        }).planets.add(self.tatooine)
 
         self.luke = People.objects.create(**{
             'name': 'Luke Skywalker',
@@ -128,7 +143,9 @@ class UpdatePeopleTest(APITestCase):
             'birth_year': '19BBY',
             'gender': 'male',
             'home_world': Planet.objects.get(name='Tatooine'),
-        }).movies.add(self.empire)
+        }).movies.add(Movie.objects.get(name='El imperio contraataca'))
+
+        print(Movie.objects.filter(name='El imperio contraataca').last().pk, 'ssss')
 
         self.payload = {
             'name': 'Luke Skywalker',
@@ -140,10 +157,13 @@ class UpdatePeopleTest(APITestCase):
             'birth_year': '19BBY',
             'gender': 'male',
             'home_world': Planet.objects.get(name='Tatooine').pk,
-            'movies': [Movie.objects.get(name='El imperio contraataca').pk]
+            'movies': [Movie.objects.filter(name='El imperio contraataca').last().pk]
         }
 
     def test_update_put_people(self) -> None:
+        api_user = User.objects.get(username='developer')
+
+        client.force_authenticate(user=api_user)
         response = client.put(
             path=f'/api/v1/people/{People.objects.get(name="Luke Skywalker").pk}',
             data=dumps(self.payload),
@@ -152,6 +172,9 @@ class UpdatePeopleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_patch_people(self) -> None:
+        api_user = User.objects.get(username='developer')
+
+        client.force_authenticate(user=api_user)
         response = client.patch(
             path=f'/api/v1/people/{People.objects.get(name="Luke Skywalker").pk}',
             data=dumps({'name': 'Luke Skywalker test'}),
@@ -161,14 +184,9 @@ class UpdatePeopleTest(APITestCase):
 
 
 class DeletePeopleTest(APITestCase):
-    def setUp(self) -> None:
-        self.empire = Movie.objects.create(**{
-            'name': 'El imperio contraataca',
-            'director': 'Irvin Kershner',
-            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
-            'release_date': '1980-12-05'
-        })
+    fixtures = ['users.json']
 
+    def setUp(self) -> None:
         self.tatooine = Planet.objects.create(**{
             'name': 'Tatooine',
             'diameter': 10465,
@@ -176,7 +194,14 @@ class DeletePeopleTest(APITestCase):
             'gravity': 1,
             'terrain': 'desert',
             'population': 200000,
-        }).movies.add(self.empire)
+        })
+
+        self.empire = Movie.objects.create(**{
+            'name': 'El imperio contraataca',
+            'director': 'Irvin Kershner',
+            'producer': 'Gary Kurtz, Robert Watts, George Lucas',
+            'release_date': '1980-12-05'
+        }).planets.add(self.tatooine)
 
         self.luke = People.objects.create(**{
             'name': 'Luke Skywalker',
@@ -188,8 +213,11 @@ class DeletePeopleTest(APITestCase):
             'birth_year': '19BBY',
             'gender': 'male',
             'home_world': Planet.objects.get(name='Tatooine'),
-        }).movies.add(self.empire)
+        }).movies.add(Movie.objects.get(name='El imperio contraataca'))
 
-    def test_delete_movie(self) -> None:
+    def test_delete_people(self) -> None:
+        api_user = User.objects.get(username='developer')
+
+        client.force_authenticate(user=api_user)
         response = client.delete(f'/api/v1/people/{People.objects.get(name="Luke Skywalker").pk}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
