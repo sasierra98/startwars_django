@@ -1,15 +1,13 @@
 from django.db import models
 from django.utils.timezone import now
 
-from movies.models import Movie
-
 
 class Planet(models.Model):
     name = models.CharField(
         max_length=150
     )
 
-    diameter = models.PositiveIntegerField()
+    diameter = models.PositiveBigIntegerField()
 
     climate = models.CharField(
         max_length=150
@@ -21,11 +19,7 @@ class Planet(models.Model):
         max_length=150
     )
 
-    population = models.PositiveIntegerField()
-
-    movies = models.ManyToManyField(
-        to=Movie
-    )
+    population = models.PositiveBigIntegerField()
 
     created_at = models.DateTimeField(
         default=now
@@ -34,6 +28,9 @@ class Planet(models.Model):
     updated_at = models.DateTimeField(
         default=now
     )
+
+    def clean(self):
+        self.updated_at = now()
 
     def __str__(self) -> str:
         return f'{self.id}|{self.name}'
