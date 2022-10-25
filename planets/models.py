@@ -12,13 +12,13 @@ class Planet(models.Model):
     diameter = models.PositiveIntegerField()
 
     climate = models.CharField(
-        max_length=20
+        max_length=150
     )
 
     gravity = models.FloatField()
 
     terrain = models.CharField(
-        max_length=20
+        max_length=150
     )
 
     population = models.PositiveIntegerField()

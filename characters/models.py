@@ -31,7 +31,7 @@ class People(models.Model):
     )
 
     gender = models.CharField(
-        max_length=10
+        max_length=20
     )
 
     home_world = models.ForeignKey(
