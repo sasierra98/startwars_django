@@ -40,7 +40,8 @@ class People(models.Model):
     )
 
     movies = models.ManyToManyField(
-        to=Movie
+        to=Movie,
+        null=True
     )
 
     created_at = models.DateTimeField(
