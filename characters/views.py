@@ -20,7 +20,7 @@ class PeopleView(views.APIView):
     filterset_class = PeopleFilter
 
     def get(self, request, format=None, *args, **kwargs) -> Response:
-        filter_name = self.request.query_params['name']
+        filter_name = self.request.query_params.get('name')
         if filter_name:
             people = People.objects.filter(name=filter_name)
         else:
