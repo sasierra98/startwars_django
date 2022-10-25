@@ -60,5 +60,5 @@ class PlanetViewDetail(views.APIView):
     def delete(self, request, pk, format=None) -> Response:
         planet = self.get_object(pk)
         planet.delete()
-        return Response('Deleted', status=status.HTTP_200_OK)
+        return Response(f'Deleted id:{pk}', status=status.HTTP_204_NO_CONTENT)
 

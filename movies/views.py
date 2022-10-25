@@ -61,4 +61,4 @@ class MovieViewDetail(views.APIView):
     def delete(self, request, pk, format=None) -> Response:
         movie = self.get_object(pk)
         movie.delete()
-        return Response('Deleted', status=status.HTTP_200_OK)
+        return Response(f'Deleted id:{pk}', status=status.HTTP_204_NO_CONTENT)
