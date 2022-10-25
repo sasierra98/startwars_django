@@ -5,6 +5,9 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django_filters import rest_framework as filters
+
+from characters.filters import PeopleFilter
 from characters.serializers import PeopleSerializer
 from characters.models import People
 
@@ -13,9 +16,15 @@ class PeopleView(views.APIView):
     serializer_class = PeopleSerializer
     authentication_classes = [BasicAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = PeopleFilter
 
     def get(self, request, format=None, *args, **kwargs) -> Response:
-        people = People.objects.all()
+        filter_name = self.request.query_params['name']
+        if filter_name:
+            people = People.objects.filter(name=filter_name)
+        else:
+            people = People.objects.all()
         serializer = self.serializer_class(people, many=True)
 
         return Response(serializer.data)
