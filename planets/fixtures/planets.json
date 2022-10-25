@@ -1,0 +1,28 @@
+[
+  {
+    "model": "planets.planet",
+    "pk": 1,
+    "fields": {
+      "name": "Alderaan",
+      "diameter": 12500,
+      "climate": "temperate",
+      "gravity": 1,
+      "terrain": "grasslands, mountains",
+      "population": 200000000,
+      "movies": [1, 2]
+    }
+  },
+  {
+    "model": "planets.planet",
+    "pk": 2,
+    "fields": {
+      "name": "Yavin IV",
+      "diameter": 10200,
+      "climate": "temperate, tropical",
+      "gravity": 1,
+      "terrain": "jungle, rainforests",
+      "population": 1000,
+      "movies": [3]
+    }
+  }
+]

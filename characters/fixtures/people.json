@@ -1,0 +1,37 @@
+[
+	{
+		"model": "characters.people",
+		"pk": 1,
+		"fields": {
+			"name": "Owen Lars",
+			"height": 178,
+			"mass": 120,
+			"hair_color": "brown, grey",
+			"skin_color": "light",
+			"eye_color": "blue",
+			"birth_year": "52BBY",
+			"gender": "male",
+			"home_world": 1,
+			"movies": [
+				1,
+				2
+			]
+		}
+	},
+	{
+		"model": "characters.people",
+		"pk": 1,
+		"fields": {
+			"name": "Jabba Desilijic Tiure",
+			"height": 175,
+			"mass": 1358,
+			"hair_color": "n/a",
+			"skin_color": "green-tan, brown",
+			"eye_color": "orange",
+			"birth_year": "600BBY",
+			"gender": "hermaphrodite",
+			"home_world": 2,
+			"movies": [3]
+		}
+	}
+]

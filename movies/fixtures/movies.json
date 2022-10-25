@@ -1,0 +1,32 @@
+[
+  {
+    "model": "movies.movie",
+    "pk": 1,
+    "fields" : {
+      "name": "La venganza de los Sith",
+      "director": "George Lucas",
+      "producer": "Rick McCallum, George Lucas",
+      "release_date": "2005-05-19"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 2,
+    "fields": {
+      "name": "El ataque de los clones",
+      "director": "George Lucas",
+      "producer": "George Lucas, Rick McCallum",
+      "release_date": "2002-05-19"
+    }
+  },
+  {
+    "model": "movies.movie",
+    "pk": 3,
+    "fields": {
+      "name": "La amenaza fantasma",
+      "director": "George Lucas",
+      "producer": "Rick McCallum, George Lucas",
+      "release_date": "1999-05-19"
+    }
+  }
+]
