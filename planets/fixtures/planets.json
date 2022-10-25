@@ -8,8 +8,7 @@
       "climate": "temperate",
       "gravity": 1,
       "terrain": "grasslands, mountains",
-      "population": 200000000,
-      "movies": [1, 2]
+      "population": 200000000
     }
   },
   {
@@ -21,8 +20,7 @@
       "climate": "temperate, tropical",
       "gravity": 1,
       "terrain": "jungle, rainforests",
-      "population": 1000,
-      "movies": [3]
+      "population": 1000
     }
   }
 ]
