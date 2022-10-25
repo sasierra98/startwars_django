@@ -1,8 +1,9 @@
 from rest_framework import views, status
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
 from movies.serializers import MovieSerializer
 from movies.models import Movie
@@ -10,6 +11,8 @@ from movies.models import Movie
 
 class MovieView(views.APIView):
     serializer_class = MovieSerializer
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None, *args, **kwargs) -> Response:
         movie = Movie.objects.all()

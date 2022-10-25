@@ -1,6 +1,8 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import views, status
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from planets.serializers import PlanetSerializer
@@ -9,6 +11,8 @@ from planets.models import Planet
 
 class PlanetView(views.APIView):
     serializer_class = PlanetSerializer
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, format=None, *args, **kwargs) -> Response:
         planet = Planet.objects.all()
