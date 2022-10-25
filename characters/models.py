@@ -26,7 +26,9 @@ class People(models.Model):
         max_length=150
     )
 
-    birth_year = models.DateField()
+    birth_year = models.CharField(
+        max_length=20
+    )
 
     gender = models.CharField(
         max_length=10
