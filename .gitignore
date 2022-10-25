@@ -1,3 +1,4 @@
 .idea
-startwars_django/settings.py
+# startwars_django/settings.py
 venv
+.env
